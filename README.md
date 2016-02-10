@@ -1,36 +1,24 @@
 # service-worker
 
-#### Outline
+#### populate_redis_worker.py
 
-Pulls from Google BigQuery to populate our databases
+Requires running postgres with: dbname='halcyon' user='postgres' host='localhost' password='hi'
+Requires running redis server with: host='localhost', port=6379, db=0
 
-Spin off child worker with node cluster
-var cluster = require('cluster);
+Change lang_list to include more languages to include.
 
-loop through all log data, processing and inserting into the DB
- * post to seperate log on each result to keep track of how far worker got through log data (in case of crash).
+To increase size of leaderboard stored, increase the 'limit 10' at the bottom of each query.
 
+TODO: Change date range in queries to be:
+```SQL
+  date >= current_date - 7
+  AND date <  current_date 
+```
+for current week, and 
+```SQL
+  date >= current_date - 14
+  AND date <  current_date - 7
+```
+for previous week.
 
-wait for last response from DB, (result of last insert)
-
-* fire off other worker to query db for velocity results
-* populate redis caches with velocity info
-
-
-1) Log_worker inserts into
-
-
-
-
-1) First pass:
-* upsert all CommitEvent type events to Repos table
-
-2) Second pass:
-* 
-
-
-
-weekly velocities
-javascript
-python
-R
+This assumes will be running cron job at ~1am for previous days new stats.
