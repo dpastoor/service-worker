@@ -16,7 +16,7 @@ except:
 
 def insertVelocities(num_repos=10):
   for lang in lang_list:
-      for base_stars, exponent in [[400, 6], [100, 6], [400, 8]]:
+      for base_stars, exponent, trend_modifier in [[400, 6, 'low'], [100, 6, 'med'], [400, 8, 'high']]:
           print('currently processing weekly for: ', lang, base_stars, exponent)
           pipe = r.pipeline()
           # current week's
@@ -38,10 +38,10 @@ def insertVelocities(num_repos=10):
               limit %s""" %(base_stars, exponent, lang, num_repos) )
           rows_curr = cur.fetchall()
           for row in rows_curr:
-              pipe.zadd('%s:curr_week_%s_%s'%(lang, base_stars, exponent), row[4], row[0])
+              pipe.zadd('%s:curr_week_%s'%(lang, trend_modifier), row[4], row[0])
 
           # prev week's
-          pipe.delete('%s:prev_week_%s_%s'%(lang, base_stars, exponent))
+          pipe.delete('%s:prev_week_%s'%(lang, trend_modifier))
           cur = conn.cursor()
           cur.execute(
               """select repo_name, language, num_stars, stars, stars::real / ((num_stars::real+%s)^(1.%s) ) AS normalized_stars
@@ -59,7 +59,7 @@ def insertVelocities(num_repos=10):
               limit %s""" %(base_stars, exponent, lang, num_repos) )
           rows_prev = cur.fetchall()
           for row in rows_prev:
-              pipe.zadd('%s:prev_week_%s_%s'%(lang, base_stars, exponent), row[4], row[0])
+              pipe.zadd('%s:prev_week_%s'%(lang, trend_modifier), row[4], row[0])
 
           # insert and delete all as single transaction
           pipe.execute()
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     try:
         num_of_repos_want_for_each_leaderboard = sys.argv[1]
     except IndexError:
-        print("Usage: myprogram.py <date>\n date: YYYY-MM-DD-HH, for ex: 2016-02-01-15")
+        print("Usage: populate_redis_worker.py <num_of_repos>\n ")
         sys.exit(1)
 
     # start inserting rows into redis
