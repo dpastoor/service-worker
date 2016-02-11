@@ -9,8 +9,11 @@ lang_list = ['All','Python', 'JavaScript', 'R', 'Go']
 # print(os.environ)
 try:
     if os.environ['POSTGRES_PORT_5432_TCP_PORT'] == '5432':
-      print ("dbname='test-db' user='postgres' host='%s' password='password'"%os.environ['POSTGRES_PORT_5432_TCP_ADDR'])
-      conn = psycopg2.connect("dbname='database' user='admin' host='%s' password='password'"%os.environ['POSTGRES_PORT_5432_TCP_ADDR'])
+      print ("dbname='test-db' user='postgres' host='%s' password='password' port='5432' "%os.environ['POSTGRES_PORT_5432_TCP_ADDR'])
+      try:
+        conn = psycopg2.connect("dbname='test-db' user='postgres' host='%s' password='password'"%os.environ['POSTGRES_PORT_5432_TCP_ADDR'])
+      except psycopg2.Error as e:
+        print(e)
     else:
       conn = psycopg2.connect("dbname='halcyon' user='postgres' host='localhost' password='hi'")
       print ("Database connected in locally")
