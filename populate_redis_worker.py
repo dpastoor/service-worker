@@ -2,16 +2,22 @@ import psycopg2
 import redis
 import sys
 import json
-
+import os
 lang_list = ['All','Python', 'JavaScript', 'R', 'Go']
 
+# print("ENVIRONEMTAL VARS")
+# print(os.environ)
 try:
     conn = psycopg2.connect("dbname='halcyon' user='postgres' host='localhost' password='hi'")
 except:
     print ("I am unable to connect to the database")
 
 try:
-    r = redis.StrictRedis(host='localhost', port=6379, db=0)
+    if os.environ['REDIS_PORT_6379_TCP_ADDR'] in globals():
+      r = redis.StrictRedis(host=os.environ['REDIS_PORT_6379_TCP_ADDR'], port=os.environ['REDIS_PORT_6379_TCP_PORT'], db=0)
+      print ("Redis connected in docker")
+    else:
+      r = redis.StrictRedis(host='localhost', port=6379, db=0)
 except:
     print ("I am unable to connect to redis")
 
