@@ -3,7 +3,7 @@ import redis
 import sys
 import json
 
-lang_list = ['All','Python', 'JavaScript', 'R', 'Go'] # empty string is all languages
+lang_list = ['All','Python', 'JavaScript', 'R', 'Go']
 
 try:
     conn = psycopg2.connect("dbname='halcyon' user='postgres' host='localhost' password='hi'")
