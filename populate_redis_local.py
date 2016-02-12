@@ -3,8 +3,7 @@ import redis
 import sys
 import json
 import os
-# lang_list = ['All','Python', 'JavaScript', 'R', 'Go', 'Ruby', 'PHP', 'TypeScript', 'HTML', 'CSS', 'JAVA', 'Scala', 'Swift', 'C++']
-lang_list = ['All', 'JavaScript']
+lang_list = ['All','Python', 'JavaScript', 'R', 'Go', 'Ruby', 'PHP', 'TypeScript', 'HTML', 'CSS', 'JAVA', 'Scala', 'Swift', 'C++']
 
 # print("ENVIRONEMTAL VARS")
 # print(os.environ)
